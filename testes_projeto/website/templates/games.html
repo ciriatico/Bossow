@@ -1,0 +1,53 @@
+{% extends "base.html" %} {% block title %}Games{% endblock %} {% block content
+%}
+
+<br />
+<h1>Jogos</h1>
+
+{% if current_user.is_authenticated %}
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      <a
+        href="{{ url_for('posts.add_game') }}"
+        class="btn btn-primary btn-sm btn-danger float-right"
+        >Reportar problema</a
+      >
+      <a
+        href="{{ url_for('posts.add_game') }}"
+        class="btn btn-primary btn-sm float-right"
+        >Adicionar jogo</a
+      >
+    </div>
+  </div>
+</div>
+
+{% endif %}
+
+<br />
+
+{% for game_row in games | batch(3, '&nbsp;') %}
+<div class="row">
+  {% for game in game_row %} {% if game.publisher|length %}
+  <div class="col-sm">
+    <div class="shadow p-3 mb-5 bg-body rounded">
+      <h3>{{ game.title }}</h3>
+      <a class="thumbnail">
+        <img
+          src="image/{{ game.cover_picture }}"
+          align="center"
+          style="max-width: 100%; height: auto"
+        />
+      </a>
+      <strong>Data de lançamento:</strong> {{ game.release_date }}<br />
+      <strong>Desenvolvedora:</strong> {{ game.developer }}<br />
+      <strong>Publicadora:</strong> {{ game.publisher }}<br /><br />
+      <strong>Enredo:</strong> {{ game.description }}<br />
+    </div>
+  </div>
+  {% else %}
+  <div class="col-sm"></div>
+  {% endif %} {% endfor %}
+</div>
+
+{% endfor %} {% endblock %}

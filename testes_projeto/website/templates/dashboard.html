@@ -1,0 +1,36 @@
+{% extends "base.html" %} {% block title %}Dashboard{% endblock %} {% block
+content %}
+
+<br/>
+<h2>Dashboard</h2>
+<br/>
+
+<div class="card">
+    <div class="card-header">
+        Bem-vindo, {{ user.first_name }}
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Informações do perfil</h5>
+        <p class="card-text">
+            <div class="container">
+                <div class="row">
+                    <div class="col-8">
+                        <strong>E-mail: </strong>{{ user.email }}</br>
+                        <strong>Id do usuário: </strong>{{ user.id }}</br>
+                        <a href="{{ url_for('auth.update_profile') }}" class="btn btn-primary btn-sm">Atualizar perfil</a>
+                        <a
+                        href="{{ url_for('auth.delete_profile')}}"
+                        class="btn btn-danger btn-sm"
+                        >Deletar conta</a
+                      >
+                      <br/><br/>
+                    </div>
+                    <div class="col-4"><img src="image/{{ user.profile_picture }}" width="150" align="right"></div>
+                </div>
+            </div>
+        </p>
+    </div>
+</div>
+
+{% endblock %}
+
