@@ -90,9 +90,10 @@ def update_profile():
             db.session.add(img)
             db.session.commit()
             profilePicture = img.id
+
         if email:
             user = User.query.filter_by(email=email).first()
-            if user.email != current_user.email:
+            if user and (user.email != current_user.email):
                 flash('E-mail já existe.', category='error')
         elif email and (len(email) < 4):
             flash('E-mail precisa ter mais de 3 caracteres.', category='error')
@@ -102,17 +103,19 @@ def update_profile():
             flash('Senhas não batem.', category='error')
         elif password1 and (len(password1) < 7):
             flash('Senha precisa ter pelo menos 7 caracteres.', category='error')
-        else:
+
+        if email:
             current_user.email = email
-            if firstName:
-                current_user.first_name = firstName
-            if password1:
-                current_user.password = generate_password_hash(password1, method='sha256')
-            if pic:
-                current_user.profile_picture = profilePicture
-            db.session.commit()
-            flash('Perfil atualizado!', category='success')
-            return redirect(url_for('views.dashboard'))
+        if firstName:
+            current_user.first_name = firstName
+        if password1:
+            current_user.password = generate_password_hash(password1, method='sha256')
+        if pic:
+            current_user.profile_picture = profilePicture
+            
+        db.session.commit()
+        flash('Perfil atualizado!', category='success')
+        return redirect(url_for('views.dashboard'))
 
     return render_template("update-profile.html", user=current_user)
 

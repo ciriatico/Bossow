@@ -1,0 +1,70 @@
+{% extends "base.html" %} {% block title %}Biblioteca - {{ game.title }}{%
+endblock %} {% block content %}
+
+<br />
+<h1>{{ game.title }}</h1>
+
+<div class="card">
+    <div class="card-header">
+    </div>  
+    <div class="card-body">
+        <h5 class="card-title">Informações do jogo</h5>
+        <p class="card-text">
+            <div class="container">
+                <div class="row">
+                    <div class="col-8">
+                        <strong>Horas jogadas: </strong>{{ library_game.spent_hours }}</br>
+                        <strong>Porcentagem concluída: </strong>{{ library_game.percentage_done }}%</br>
+                        <strong>Último login: </strong>{{ library_game.last_logged }}</br>
+                        <br/>
+                        <a href="{{ url_for('posts.update_library', id=library_game.game_id) }}" class="btn btn-primary btn-sm">Atualizar dados</a>
+                        <a href="{{ url_for('posts.delete_from_library', id=library_game.game_id) }}" class="btn btn-primary btn-danger btn-sm">Remover jogo</a>
+                      <br/><br/>
+                    </div>
+                    <div class="col-4"><img src="/image/{{ game.cover_picture }}" width="200" align="right"></div>
+                </div>
+            </div>
+        </p>
+    </div>
+</div>
+
+</br>
+<div class="card">
+    <div class="card-header">
+        Capturas de tela
+    </div>
+    <div class="card-body">
+            <div class="container">
+                <div class="row">
+                        <form enctype="multipart/form-data" method="POST">
+                            <div class="form-group">
+                            </br>
+                              <input type="file" name="pic" enctype="multipart/form-data" method="POST" />
+                              <button type="submit" class="btn btn-secondary btn-sm">Enviar captura</button>
+                            </div>
+                          </form>
+                          {% for screenshot_row in screenshots | batch(3, ' ') %}
+                          <div class="row">
+                            {% for screenshot in screenshot_row %} {% if screenshot.game_id %}
+                            <div class="col-sm">
+                              <div class="shadow p-1 mb-5 bg-body rounded">
+                                <a href="/image/{{ screenshot.pic_id }}" target="_blank" class="thumbnail">
+                                  <img
+                                    src="/image/{{ screenshot.pic_id }}"
+                                    align="center"
+                                    style="max-width: 100%; height: auto"
+                                  />
+                                </a>
+                              </div>
+                            </div>
+                            {% else %}
+                            <div class="col-sm"></div>
+                            {% endif %} {% endfor %}{% endfor %}
+                      <br/><br/>
+                </div>
+            </div>
+        </p>
+    </div>
+</div>
+
+{% endblock %}

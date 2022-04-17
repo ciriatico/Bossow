@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block title %}Games{% endblock %} {% block content
+{% extends "base.html" %} {% block title %}Jogos{% endblock %} {% block content
 %}
 
 <br />
@@ -31,7 +31,7 @@
   {% for game in game_row %} {% if game.publisher|length %}
   <div class="col-sm">
     <div class="shadow p-3 mb-5 bg-body rounded">
-      <h3>{{ game.title }}</h3>
+      <a href="/games/{{ game.id }}"><h3>{{ game.title }}</h3></a>
       <a class="thumbnail">
         <img
           src="image/{{ game.cover_picture }}"

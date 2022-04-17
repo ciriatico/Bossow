@@ -1,0 +1,39 @@
+{% extends "base.html" %} {% block title %}Atualizar jogo da biblioteca{%
+endblock %} {% block content %}
+<br />
+<form method="POST">
+  <h3 align="center">Atualizar jogo da biblioteca</h3>
+  <div class="form-group">
+    <label for="email">Horas jogadas</label>
+    <input
+      type="spent_hours"
+      class="form-control"
+      id="spent_hours"
+      name="spent_hours"
+      placeholder="Insira quantidade de horas jogadas"
+    />
+  </div>
+  <div class="form-group">
+    <label for="percentage_done">Porcentagem concluída</label>
+    <input
+      type="percentage_done"
+      class="form-control"
+      id="percentage_done"
+      name="percentage_done"
+      placeholder="Insira porcentagem concluída"
+    />
+  </div>
+  <div class="form-group">
+    <label for="last_logged">Último login</label>
+    <input
+      type="last_logged"
+      class="form-control"
+      id="last_logged"
+      name="last_logged"
+      placeholder="Data do último login"
+    />
+  </div>
+  <button type="submit" class="btn btn-primary btn-sm">Atualizar dados</button>
+  <a href="./" class="btn btn-secondary btn-sm">Cancelar</a>
+</form>
+{% endblock %}

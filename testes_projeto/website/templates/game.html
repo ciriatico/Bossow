@@ -1,0 +1,126 @@
+{% extends "base.html" %} {% block title %}{{ game.title }}{% endblock %} {%
+block content %}
+
+<br />
+<h1>{{ game.title }}</h1>
+
+{% if current_user.is_authenticated %}
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+        <button
+        type="button"
+        class="btn btn-primary btn-sm float-right"
+        onClick="addToLibrary({{ game.id }})"
+      >
+        Adicionar à biblioteca
+      </button>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<br/>
+
+<div class="card">
+    <div class="card-header">
+    </div>  
+    <div class="card-body">
+        <h5 class="card-title">Informações do jogo</h5>
+        <p class="card-text">
+            <div class="container">
+                <div class="row">
+                    <div class="col-8">
+                        <strong>Data de lançamento: </strong>{{ game.release_date }}</br>
+                        <strong>Desenvolvedora: </strong>{{ game.developer }}</br>
+                        <strong>Publicadora: </strong>{{ game.publisher }}</br>
+                        <br/>
+                        <strong>Enredo: </strong>{{ game.description }}</br>
+                        <br/>
+                      <br/><br/>
+                    </div>
+                    <div class="col-4"><img src="/image/{{ game.cover_picture }}" width="250" align="right"></div>
+                </div>
+            </div>
+        </p>
+    </div>
+</div>
+
+<br />
+
+<div class="card">
+    <div class="card-header">
+        <h5>Trailer</h5>
+    </div>
+    <div class="card-body">
+            <div class="container">
+                <div class="row">
+                    <iframe style="display: block; margin: auto;" width="560" height="315" src="{{ game.trailer_url.replace('watch?v=', 'embed/') }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                      <br/><br/>
+                </div>
+            </div>
+        </p>
+    </div>
+</div>
+
+<br/>
+
+<div class="card">
+    <div class="card-header">
+        <h5>Análises sobre o jogo</h5>
+    </div>
+    <div class="card-body">
+            <div class="container">
+                {% if current_user.is_authenticated %}
+                    <form class="mb-3" method="POST">
+                        <textarea
+                          type="text"
+                          id="text"
+                          name="text"
+                          class="form-control"
+                          placeholder="Insira sua análise"
+                          rows="4"
+                        ></textarea>
+                        <br />
+                        <label>Nota:</label>
+                        <select name="score" id="score">
+                          <option value=1>*</option>
+                          <option value=2>**</option>
+                          <option value=3>***</option>
+                          <option value=4>****</option>
+                          <option value=5>*****</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary float-right">
+                          Publicar análise
+                        </button>
+                      </form>
+                      {% endif %}
+
+                      <hr class="mt-2 mb-3"/>
+                      {% for review in reviews %}
+                      <div class="shadow p-3 mb-2 bg-body rounded">
+                        <img
+                        src="/image/{{ review.user.profile_picture }}"
+                        align="center"
+                        style="max-width: 40px; height: auto"
+                      />
+                        <strong>{{ review.user.first_name }} publicou:</strong>  
+                        {% if review.user_id == current_user.id %}
+                        <button type="button" class="close" onClick="deleteReview({{ review.game.id }}, {{ review.id }})">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {% endif %}
+                        <hr class="mt-2 mb-3"/>
+                        <p>{{ review.text }}</p>
+                        <hr class="mt-2 mb-3"/>
+                    <p style="text-align:right;">Nota: {{ review.score }}/5</p>
+                    </div>
+                      {% endfor %}
+            </div>
+        </p>
+    </div>
+</div>
+
+<br/>
+
+{% endblock %}

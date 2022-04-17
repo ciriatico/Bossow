@@ -1,0 +1,27 @@
+{% extends "base.html" %} {% block title %}Biblioteca de jogos{% endblock %} {%
+block content %}
+
+<br />
+<h1>Biblioteca de jogos</h1>
+{% for game_row in games | batch(5, ' ') %}
+<div class="row">
+  {% for game in game_row %} {% if game.id %}
+  <div class="col-sm">
+    <div class="shadow p-3 mb-5 bg-body rounded">
+      <a href="/library/{{ game.id }}"><h6>{{ game.title }}</h6></a>
+      <a class="thumbnail">
+        <img
+          src="image/{{ game.cover_picture }}"
+          align="center"
+          style="max-width: 100%; height: auto"
+        />
+      </a>
+      <strong>Horas jogadas:</strong> {{ game.spent_hours }}<br />
+      <strong>% concluída:</strong> {{ game.percentage_done }}%<br />
+    </div>
+  </div>
+  {% else %}
+  <div class="col-sm"></div>
+  {% endif %} {% endfor %}{% endfor %}
+</div>
+{% endblock %}
