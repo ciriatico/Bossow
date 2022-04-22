@@ -24,3 +24,39 @@ function addToLibrary(gameId) {
         window.location.href = "/games/" + gameId.toString();
     });
 }
+
+function deleteComplaint(complaintId) {
+    fetch('/delete-complaint', {
+        method: 'POST',
+        body: JSON.stringify({ complaintId: complaintId })
+    }).then((_res) => {
+        window.location.href = "/complaints";
+    });
+}
+
+function checkComplaint(complaintId) {
+    fetch('/check-complaint', {
+        method: 'POST',
+        body: JSON.stringify({ complaintId: complaintId })
+    }).then((_res) => {
+        window.location.href = "/complaints/manage";
+    });
+}
+
+function uncheckComplaint(complaintId) {
+    fetch('/uncheck-complaint', {
+        method: 'POST',
+        body: JSON.stringify({ complaintId: complaintId })
+    }).then((_res) => {
+        window.location.href = "/complaints/manage";
+    });
+}
+
+function deleteUpload(uploadId) {
+    fetch('/delete-upload', {
+        method: 'POST',
+        body: JSON.stringify({ uploadId: uploadId })
+    }).then((_res) => {
+        window.location.href = "/uploads/manage";
+    });
+}
