@@ -1,0 +1,129 @@
+{% extends "base.html" %} {% block title %}Gerenciar perfil{% endblock %} {%
+block content %}
+
+<br/>
+
+    <div class="card">
+        <div class="card-header">Informações de usuário
+        </div>  
+        <div class="card-body">
+            <h5 class="card-title">{{ profile.first_name }}</h5>
+            <p class="card-text">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-8">
+                          <strong>Id do usuário: </strong>{{ profile.id }}</br>
+                            <strong>E-mail: </strong>{{ profile.email }}</br>
+                            <strong>Papel: </strong>{{ "Conta comum" if profile.role == "user" else "Administrador" }}</br>
+                            <strong>Data de criação: </strong>{{ profile.first_name }}</br>
+                            <br/>
+                            {% if (current_user.role == "admin") and (profile.role != current_user.id) %}
+                            <form method="POST">
+                              <div class="form-group">
+                                <label>Alterar direitos:</label>
+                                <select name="role" id="role">
+                                  <option value="user">Conta comum</option>
+                                  <option value="admin">Administrador</option>
+                                </select>
+                              </div>
+                              <button type="submit" class="btn btn-primary btn-sm">Atualizar conta</button>
+                            </form>
+                            {% endif %}
+                          <br/><br/>
+                        </div>
+                        <div class="col-4"><img src="/image/{{ profile.profile_picture }}" width="200" align="right"></div>
+                    </div>
+                </div>
+            </p>
+        </div>
+    </div>
+    
+    <br/>
+
+    <div class="card">
+        <div class="card-header">
+            Biblioteca de jogos
+        </div>
+        <div class="card-body">
+            {% for library_games_row in library_games | batch(7, ' ') %}
+            <div class="row">
+              {% for library_game in library_games_row %} {% if library_game.game %}
+              <div class="col-sm">
+                <div class="shadow p-3 mb-5 bg-body rounded">
+                  <a href="/games/{{ library_game.game.id }}"><h6>{{ library_game.game.title }}</h6></a>
+                  <a class="thumbnail">
+                    <img
+                      src="/image/{{ library_game.game.cover_picture }}"
+                      align="center"
+                      style="max-width: 100%; height: auto"
+                    />
+                  </a>
+                </div>
+              </div>
+              {% else %}
+              <div class="col-sm"></div>
+              {% endif %} {% endfor %}{% endfor %}
+            </div>
+            </p>
+        </div>
+    </div>
+
+    <br/>
+
+    <div class="card">
+        <div class="card-header">
+            Análises publicadas
+        </div>
+        <div class="card-body">
+                <div class="container">
+    
+                          <hr class="mt-2 mb-3"/>
+                          {% for review in reviews %}
+                          <div class="shadow p-3 mb-2 bg-body rounded">
+                            <img
+                            src="/image/{{ review.game.cover_picture }}"
+                            align="center"
+                            style="max-width: 40px; height: auto"
+                          />
+                            <strong>Avaliação em <a href="/games/{{review.game.id}}">{{ review.game.title }}</a></strong>  
+                            <hr class="mt-2 mb-3"/>
+                            <p>{{ review.text }}</p>
+                            <hr class="mt-2 mb-3"/>
+                        <p style="text-align:right;">Nota: {{ review.score }}/5</p>
+                        </div>
+                          {% endfor %}
+                </div>
+            </p>
+        </div>
+    </div>
+
+    <br/>
+
+    {% if current_user.role == "admin" %}
+    <div class="card">
+        <div class="card-header">
+            Reclamações feitas
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush" id="notes">
+                {% for complaint in complaints %}
+                <li class="list-group-item">
+                  <strong>Jogo: </strong> {{ complaint.title }}<br />
+                  <strong>Id da denúncia:</strong> {{complaint.id}}<br />
+                  <strong>Denúncia: </strong>{{ complaint.text }}<br />
+                  <strong>Estado da solicitação: </strong> {{"Resolvido" if complaint.solved
+                  else "Pendente"}}<br />
+                  <strong>Tipo da solicitação: </strong> {{ "Alteração" if complaint.type ==
+                  "change" else "Exclusão" }}
+                </li>
+                {% endfor %}
+              </ul>
+            </p>
+        </div>
+    </div>
+
+    {% endif %}
+
+    <br/>
+
+{% endblock %}

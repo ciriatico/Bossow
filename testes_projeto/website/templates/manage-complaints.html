@@ -1,0 +1,82 @@
+{% extends "base.html" %} {% block title %}Gerenciar denúncias{% endblock %} {%
+block content %}
+
+<br/>
+<h3 align="center">Gerenciar denúncias</h3>
+<br/>
+
+<div class="card">
+  <div class="card-header">
+      Denúncias pendentes
+  </div>
+  <div class="card-body">
+      <ul class="list-group list-group-flush" id="notes">
+          {% for complaint in complaints %}
+          {% if not complaint.solved %}
+          <li class="list-group-item">
+            <button
+            type="button"
+            class="close"
+            onClick="checkComplaint({{ complaint.id }})"
+          >
+            <span aria-hidden="true">&check;</span>
+          </button>
+            <strong>Jogo: </strong> {{ complaint.game.title }}<br />
+            <strong>Autor: </strong> {{ complaint.user.first_name }}<br />
+            <strong>Id da denúncia:</strong> {{complaint.id}}<br />
+            <strong>Estado da solicitação: </strong> {{"Resolvido" if complaint.solved
+            else "Pendente"}}<br />
+            <strong>Tipo da solicitação: </strong> {{ "Alteração" if complaint.type ==
+            "change" else "Exclusão" }}
+            <br/><br/>
+            <strong>Denúncia: </strong>{{ complaint.text }}<br />
+          </li>
+          {% endif %}
+          {% endfor %}
+        </ul>
+      </p>
+  </div>
+</div>
+
+<br/>
+
+<div class="card">
+  <div class="card-header">
+      Denúncias analisadas
+  </div>
+  <div class="card-body">
+      <ul class="list-group list-group-flush" id="notes">
+          {% for complaint in complaints %}
+          {% if complaint.solved %}
+          <li class="list-group-item">
+            <button
+            type="button"
+            class="close"
+            onClick="uncheckComplaint({{ complaint.id }})"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+            <strong>Jogo: </strong> {{ complaint.game.title }}<br />
+            <strong>Autor: </strong> {{ complaint.user.first_name }}<br />
+            <strong>Id da denúncia:</strong> {{complaint.id}}<br />
+            <strong>Estado da solicitação: </strong> {{"Resolvido" if complaint.solved
+            else "Pendente"}}<br />
+            <strong>Tipo da solicitação: </strong> {{ "Alteração" if complaint.type ==
+            "change" else "Exclusão" }}
+            <br/><br/>
+            <strong>Denúncia: </strong>{{ complaint.text }}<br />
+          </li>
+          {% endif %}
+          {% endfor %}
+        </ul>
+      </p>
+  </div>
+</div>
+
+<br/>
+<a href="/dashboard" class="btn btn-secondary">Voltar</a>
+<br/>
+<br/>
+
+<br />
+{% endblock %}

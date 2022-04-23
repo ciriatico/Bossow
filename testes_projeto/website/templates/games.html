@@ -10,11 +10,6 @@
     <div class="col-lg-12">
       <a
         href="{{ url_for('posts.add_game') }}"
-        class="btn btn-primary btn-sm btn-danger float-right"
-        >Reportar problema</a
-      >
-      <a
-        href="{{ url_for('posts.add_game') }}"
         class="btn btn-primary btn-sm float-right"
         >Adicionar jogo</a
       >
@@ -34,7 +29,7 @@
       <a href="/games/{{ game.id }}"><h3>{{ game.title }}</h3></a>
       <a class="thumbnail">
         <img
-          src="image/{{ game.cover_picture }}"
+          src="/image/{{ game.cover_picture }}"
           align="center"
           style="max-width: 100%; height: auto"
         />

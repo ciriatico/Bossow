@@ -1,0 +1,39 @@
+{% extends "base.html" %} {% block title %}Contas{% endblock %} {% block content
+%}
+
+<br />
+<h3>Contas cadastradas</h3>
+
+{% for user_row in users | batch(4, ' ') %}
+<div class="row">
+  {% for user in user_row %} {% if user.id %}
+  <div class="col-sm">
+    <div class="shadow p-3 mb-5 bg-body rounded">
+      <a href="{{ url_for('posts.get_profile', id=user.id) }}"
+        ><h5 style="text-align: center">{{ user.first_name }}</h5></a
+      >
+      <a class="thumbnail">
+        <img
+          src="/image/{{ user.profile_picture }}"
+          align="center"
+          style="max-width: 80px; height: auto; display: block; margin: 0 auto"
+        />
+      </a>
+      <strong>Id: </strong> {{ user.id }}<br />
+      <strong>E-mail: </strong> {{ user.email }}<br />
+      <strong>Papel: </strong> {{ "Administrador" if user.role == "admin" else
+      "Usuário comum" }}<br />
+      <strong>Data de criação: </strong> {{ user.id }}%<br />
+    </div>
+  </div>
+  {% else %}
+  <div class="col-sm"></div>
+  {% endif %} {% endfor %}
+</div>
+{% endfor %}
+
+<a href="/dashboard" class="btn btn-secondary">Voltar</a>
+
+<br />
+<br />
+{% endblock %}

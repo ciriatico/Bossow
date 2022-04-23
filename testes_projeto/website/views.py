@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import login_required, current_user
-from .models import Note, Game
+from .models import Note, Game, User, Complaint
 from . import db
 import json
 
@@ -41,4 +41,24 @@ def delete_note():
 @views.route('/dashboard', methods=['POST', 'GET'])
 @login_required
 def dashboard():
-    return render_template("dashboard.html", user=current_user)
+    if current_user.role == "admin":
+        users = User.query.all()
+        complaints = Complaint.query.all()
+
+        admin_info_dict = {
+            "users": len(users),
+            "unsolved_complaints": len([c for c in complaints if not c.solved])
+        }
+    else:
+        admin_info_dict = dict()
+
+    library_games = current_user.library_games.all()
+    reviews = current_user.reviews.all()
+    complaints = current_user.complaints.all()
+    complaints_solved = [c.solved for c in complaints]
+    complaints_solved_dict = {
+        "solved": sum(complaints_solved),
+        "unsolved": len(complaints_solved) - sum(complaints_solved)
+    }
+
+    return render_template("dashboard.html", user=current_user, library_games=library_games, reviews=reviews, complaints_solved=complaints_solved_dict, admin_info=admin_info_dict)

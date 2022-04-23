@@ -8,6 +8,20 @@ block content %}
 <div class="container">
   <div class="row">
     <div class="col-lg-12">
+      {% if current_user.role != "admin" %}
+      <a
+      href="{{ url_for('posts.add_complaint', id=game.id) }}"
+      class="btn btn-primary btn-sm btn-danger float-right"
+      >Reportar problema</a
+    >
+    {% endif %}
+    {% if current_user.role == "admin" %}
+    <a
+    href="{{ url_for('posts.update_game', id=game.id) }}"
+    class="btn btn-secondary btn-sm float-right"
+    >Alterar jogo</a
+  >
+    {% endif %}
         <button
         type="button"
         class="btn btn-primary btn-sm float-right"
@@ -31,6 +45,7 @@ block content %}
             <div class="container">
                 <div class="row">
                     <div class="col-8">
+                      <strong>Id do jogo: </strong>{{ game.id }}</br>
                         <strong>Data de lançamento: </strong>{{ game.release_date }}</br>
                         <strong>Desenvolvedora: </strong>{{ game.developer }}</br>
                         <strong>Publicadora: </strong>{{ game.publisher }}</br>
@@ -104,8 +119,8 @@ block content %}
                         align="center"
                         style="max-width: 40px; height: auto"
                       />
-                        <strong>{{ review.user.first_name }} publicou:</strong>  
-                        {% if review.user_id == current_user.id %}
+                        <strong><a href="/profile/{{review.user.id}}">{{ review.user.first_name }}</a> publicou:</strong>  
+                        {% if (review.user_id == current_user.id) or (current_user.role == "admin") %}
                         <button type="button" class="close" onClick="deleteReview({{ review.game.id }}, {{ review.id }})">
                             <span aria-hidden="true">&times;</span>
                         </button>
