@@ -30,11 +30,11 @@
       <div class="collapse navbar-collapse" id="navbar">
         <div class="navbar-nav">
           <a class="nav-item nav-link" id="home" href="/">Início</a>
-          {% if user.is_authenticated %}
+          {% if session.user_id %}
           <a
             class="nav-item nav-link"
             id="profile"
-            href="/profile/{{ current_user.id }}"
+            href="/profile/{{ session['user_id'] }}"
             >Perfil</a
           >
           <a class="nav-item nav-link" id="games" href="/games">Jogos</a>

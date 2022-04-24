@@ -3,8 +3,8 @@
 <br/>
 <h1 align="center">Lembretes</h1>
 <ul class="list-group list-group-flush" id="notes">
-  {% for note in user.notes %}
-  <li class="list-group-item">{{ note.data }}
+  {% for note in notes %}
+  <li class="list-group-item">{{ note.note_text }}
       <button type="button" class="close" onClick="deleteNote({{ note.id }})">
           <span aria-hidden="true">&times;</span>
       </button>

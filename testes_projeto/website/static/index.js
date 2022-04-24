@@ -60,3 +60,12 @@ function deleteUpload(uploadId) {
         window.location.href = "/uploads/manage";
     });
 }
+
+function deleteScreenshot(gameId, uploadId) {
+    fetch('/delete-screenshot', {
+        method: 'POST',
+        body: JSON.stringify({ uploadId: uploadId })
+    }).then((_res) => {
+        window.location.href = "/library/" + gameId;
+    });
+}

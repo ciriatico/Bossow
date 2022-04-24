@@ -10,7 +10,7 @@
   <div class="col-sm">
     <div class="shadow p-3 mb-5 bg-body rounded">
       <a href="{{ url_for('posts.get_profile', id=user.id) }}"
-        ><h5 style="text-align: center">{{ user.first_name }}</h5></a
+        ><h5 style="text-align: center">{{ user.full_name }}</h5></a
       >
       <a class="thumbnail">
         <img
@@ -23,7 +23,7 @@
       <strong>E-mail: </strong> {{ user.email }}<br />
       <strong>Papel: </strong> {{ "Administrador" if user.role == "admin" else
       "Usuário comum" }}<br />
-      <strong>Data de criação: </strong> {{ user.id }}%<br />
+      <strong>Data de criação: </strong> {{ user.created_at.strftime('%d/%m/%Y') }}<br />
     </div>
   </div>
   {% else %}

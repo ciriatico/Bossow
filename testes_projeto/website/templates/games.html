@@ -34,7 +34,7 @@
           style="max-width: 100%; height: auto"
         />
       </a>
-      <strong>Data de lançamento:</strong> {{ game.release_date }}<br />
+      <strong>Data de lançamento:</strong> {{ game.release_date.strftime("%d/%m/%Y") }}<br />
       <strong>Desenvolvedora:</strong> {{ game.developer }}<br />
       <strong>Publicadora:</strong> {{ game.publisher }}<br /><br />
       <strong>Enredo:</strong> {{ game.description }}<br />

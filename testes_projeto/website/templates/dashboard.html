@@ -7,7 +7,7 @@ content %}
 
 <div class="card">
     <div class="card-header">
-        Bem-vindo, {{ user.first_name }}
+        Bem-vindo, {{ user.full_name }}
     </div>
     <div class="card-body">
         <h5 class="card-title">Informações do perfil</h5>
@@ -16,7 +16,7 @@ content %}
                 <div class="row">
                     <div class="col-8">
                         <strong>Id do usuário: </strong>{{ user.id }}<br/>
-                        <strong>Tipo de conta: </strong>{{"Usuário" if current_user.role != "admin" else "Administrador"}}<br/>
+                        <strong>Tipo de conta: </strong>{{"Usuário" if user.role != "admin" else "Administrador"}}<br/>
                         <strong>E-mail: </strong>{{ user.email }}<br/>
                         <br/>
                         <strong>Jogos comprados: </strong>{{ library_games|length }}<br/>
@@ -43,7 +43,7 @@ content %}
     </div>
 </div>
 
-{% if current_user.role == "admin" %}
+{% if session.user_permission == "admin" %}
 <br/>
 <div class="card">
     <div class="card-body">

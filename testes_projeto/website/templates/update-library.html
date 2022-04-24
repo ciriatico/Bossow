@@ -2,34 +2,35 @@
 endblock %} {% block content %}
 <br />
 <form method="POST">
-  <h3 align="center">Atualizar jogo da biblioteca</h3>
+  <h3 align="center">Atualizar dados</h3>
+  <h4 align="center">{{ game.title }}</h4>
   <div class="form-group">
     <label for="email">Horas jogadas</label>
     <input
-      type="spent_hours"
+      type="hours_played"
       class="form-control"
-      id="spent_hours"
-      name="spent_hours"
+      id="hours_played"
+      name="hours_played"
       placeholder="Insira quantidade de horas jogadas"
     />
   </div>
   <div class="form-group">
-    <label for="percentage_done">Porcentagem concluída</label>
+    <label for="completion_percentage">Porcentagem concluída</label>
     <input
-      type="percentage_done"
+      type="completion_percentage"
       class="form-control"
-      id="percentage_done"
-      name="percentage_done"
+      id="completion_percentage"
+      name="completion_percentage"
       placeholder="Insira porcentagem concluída"
     />
   </div>
   <div class="form-group">
-    <label for="last_logged">Último login</label>
+    <label for="last_logged_in">Último login</label>
     <input
-      type="last_logged"
+      type="last_logged_in"
       class="form-control"
-      id="last_logged"
-      name="last_logged"
+      id="last_logged_in"
+      name="last_logged_in"
       placeholder="Data do último login"
     />
   </div>

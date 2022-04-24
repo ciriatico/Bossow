@@ -9,19 +9,19 @@ content %}
     <button
       type="button"
       class="close"
-      onClick="deleteComplaint({{ complaint.id }})"
+      onClick="deleteComplaint({{ complaint.complaint_id }})"
     >
       <span aria-hidden="true">&times;</span>
     </button>
     <a
-      href="{{ url_for('posts.update_complaint', id=complaint.id) }}"
+      href="{{ url_for('posts.update_complaint', id=complaint.complaint_id) }}"
       class="close"
       ><span aria-hidden="true">&#9998;</span></a
     >
     {% endif %}
     <strong>Jogo: </strong> {{ complaint.title }}<br />
-    <strong>Id da denúncia:</strong> {{complaint.id}}<br />
-    <strong>Denúncia: </strong>{{ complaint.text }}<br />
+    <strong>Id da denúncia:</strong> {{complaint.complaint_id}}<br />
+    <strong>Denúncia: </strong>{{ complaint.complaint_text }}<br />
     <strong>Estado da solicitação: </strong> {{"Resolvido" if complaint.solved
     else "Pendente"}}<br />
     <strong>Tipo da solicitação: </strong> {{ "Alteração" if complaint.type ==

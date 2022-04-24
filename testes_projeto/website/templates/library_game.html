@@ -13,9 +13,9 @@ endblock %} {% block content %}
             <div class="container">
                 <div class="row">
                     <div class="col-8">
-                        <strong>Horas jogadas: </strong>{{ library_game.spent_hours }}</br>
-                        <strong>Porcentagem concluída: </strong>{{ library_game.percentage_done }}%</br>
-                        <strong>Último login: </strong>{{ library_game.last_logged }}</br>
+                        <strong>Horas jogadas: </strong>{{ library_game.hours_played }}</br>
+                        <strong>Porcentagem concluída: </strong>{{ library_game.completion_percentage }}%</br>
+                        <strong>Último login: </strong>{{ library_game.last_logged_in }}</br>
                         <br/>
                         <a href="{{ url_for('posts.update_library', id=library_game.game_id) }}" class="btn btn-primary btn-sm">Atualizar dados</a>
                         <a href="{{ url_for('posts.delete_from_library', id=library_game.game_id) }}" class="btn btn-primary btn-danger btn-sm">Remover jogo</a>
@@ -48,6 +48,9 @@ endblock %} {% block content %}
                             {% for screenshot in screenshot_row %} {% if screenshot.game_id %}
                             <div class="col-sm">
                               <div class="shadow p-1 mb-5 bg-body rounded">
+                                  <button type="button" class="close" onClick="deleteScreenshot({{ library_game.game_id }}, {{ screenshot.pic_id }})">
+                                      <span aria-hidden="true">&times;</span>
+                                  </button>
                                 <a href="/image/{{ screenshot.pic_id }}" target="_blank" class="thumbnail">
                                   <img
                                     src="/image/{{ screenshot.pic_id }}"

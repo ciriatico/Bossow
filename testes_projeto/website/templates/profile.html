@@ -7,7 +7,7 @@ block content %}
         <div class="card-header">Informações de usuário
         </div>  
         <div class="card-body">
-            <h5 class="card-title">{{ profile.first_name }}</h5>
+            <h5 class="card-title">{{ profile.full_name }}</h5>
             <p class="card-text">
                 <div class="container">
                     <div class="row">
@@ -15,7 +15,7 @@ block content %}
                           <strong>Id do usuário: </strong>{{ profile.id }}</br>
                             <strong>E-mail: </strong>{{ profile.email }}</br>
                             <strong>Papel: </strong>{{ "Conta comum" if profile.role == "user" else "Administrador" }}</br>
-                            <strong>Data de criação: </strong>{{ profile.first_name }}</br>
+                            <strong>Data de criação: </strong>{{ profile.created_at.strftime('%d/%m/%Y') }}</br>
                             <br/>
                             {% if (current_user.role == "admin") and (profile.role != current_user.id) %}
                             <form method="POST">
@@ -47,13 +47,13 @@ block content %}
         <div class="card-body">
             {% for library_games_row in library_games | batch(7, ' ') %}
             <div class="row">
-              {% for library_game in library_games_row %} {% if library_game.game %}
+              {% for library_game in library_games_row %} {% if library_game.game_id %}
               <div class="col-sm">
                 <div class="shadow p-3 mb-5 bg-body rounded">
-                  <a href="/games/{{ library_game.game.id }}"><h6>{{ library_game.game.title }}</h6></a>
+                  <a href="/games/{{ library_game.game_id }}"><h6>{{ library_game.title }}</h6></a>
                   <a class="thumbnail">
                     <img
-                      src="/image/{{ library_game.game.cover_picture }}"
+                      src="/image/{{ library_game.cover_picture }}"
                       align="center"
                       style="max-width: 100%; height: auto"
                     />
@@ -81,13 +81,13 @@ block content %}
                           {% for review in reviews %}
                           <div class="shadow p-3 mb-2 bg-body rounded">
                             <img
-                            src="/image/{{ review.game.cover_picture }}"
+                            src="/image/{{ review.cover_picture }}"
                             align="center"
                             style="max-width: 40px; height: auto"
                           />
-                            <strong>Avaliação em <a href="/games/{{review.game.id}}">{{ review.game.title }}</a></strong>  
+                            <strong>Avaliação em <a href="/games/{{review.game_id}}">{{ review.game_title }}</a></strong>  
                             <hr class="mt-2 mb-3"/>
-                            <p>{{ review.text }}</p>
+                            <p>{{ review.review_text }}</p>
                             <hr class="mt-2 mb-3"/>
                         <p style="text-align:right;">Nota: {{ review.score }}/5</p>
                         </div>
@@ -99,7 +99,7 @@ block content %}
 
     <br/>
 
-    {% if current_user.role == "admin" %}
+    {% if session.user_permission == "admin" %}
     <div class="card">
         <div class="card-header">
             Reclamações feitas

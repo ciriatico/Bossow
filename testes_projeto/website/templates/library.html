@@ -5,19 +5,19 @@ block content %}
 <h1>Biblioteca de jogos</h1>
 {% for game_row in games | batch(5, ' ') %}
 <div class="row">
-  {% for game in game_row %} {% if game.id %}
+  {% for game in game_row %} {% if game.game_id %}
   <div class="col-sm">
     <div class="shadow p-3 mb-5 bg-body rounded">
-      <a href="/library/{{ game.id }}"><h6>{{ game.title }}</h6></a>
+      <a href="/library/{{ game.game_id }}"><h6>{{ game.title }}</h6></a>
       <a class="thumbnail">
         <img
-          src="image/{{ game.cover_picture }}"
+          src="/image/{{ game.cover_picture }}"
           align="center"
           style="max-width: 100%; height: auto"
         />
       </a>
-      <strong>Horas jogadas:</strong> {{ game.spent_hours }}<br />
-      <strong>% concluída:</strong> {{ game.percentage_done }}%<br />
+      <strong>Horas jogadas:</strong> {{ game.hours_played }}<br />
+      <strong>% concluída:</strong> {{ game.completion_percentage }}%<br />
     </div>
   </div>
   {% else %}
