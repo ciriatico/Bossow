@@ -8,14 +8,14 @@ block content %}
 <div class="container">
   <div class="row">
     <div class="col-lg-12">
-      {% if current_user.role != "admin" %}
+      {% if session.user_permission != "admin" %}
       <a
       href="{{ url_for('posts.add_complaint', id=game.id) }}"
       class="btn btn-primary btn-sm btn-danger float-right"
       >Reportar problema</a
     >
     {% endif %}
-    {% if current_user.role == "admin" %}
+    {% if session.user_permission == "admin" %}
     <a
     href="{{ url_for('posts.update_game', id=game.id) }}"
     class="btn btn-secondary btn-sm float-right"

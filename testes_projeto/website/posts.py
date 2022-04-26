@@ -28,7 +28,7 @@ def games():
     games = GameDAO().get_all_sorted(cursor, 'release_date')
     return render_template("games.html", games=games, session=session)
 
-@login_required
+@is_authenticated
 @posts.route('/add-game', methods=['GET', 'POST'])
 def add_game():
     if request.method == 'POST':
@@ -39,20 +39,26 @@ def add_game():
         publisher = request.form.get('publisher')
         trailer_url = request.form.get('trailer_url')
 
+        print(f"release_date {type(release_date)}")
+
         pic = request.files['pic']
         filename = secure_filename(pic.filename)
         mimetype = pic.mimetype
-        img = Image(img=pic.read(), mimetype=mimetype, name=filename)
-        db.session.add(img)
-        db.session.commit()
 
-        new_game = Game(title=title, release_date=release_date, description=description, developer=developer, publisher=publisher, trailer_url=trailer_url, cover_picture=img.id)
-        db.session.add(new_game)
-        db.session.commit()
+        cursor = mysql.connection.cursor()
+        img = Image(id=None, img=pic.read(), mimetype=mimetype, filename=filename, created_at=None)
+        ImageDAO().add(cursor, img)
+        mysql.connection.commit()
+        cover_picture = cursor.lastrowid
+
+        add_game = Game(title=title, release_date=release_date, description=description, developer=developer, publisher=publisher, trailer_url=trailer_url, cover_picture=cover_picture)
+        GameDAO().add(cursor, add_game)
+        mysql.connection.commit()
+        
         flash('Jogo adicionado!', category='success')
         return redirect(url_for('posts.games'))
 
-    return render_template('add-game.html', user=current_user)
+    return render_template('add-game.html', session=session)
 
 @posts.route('/upload', methods=['GET', 'POST'])
 def upload():
@@ -69,11 +75,11 @@ def upload():
         db.session.commit()
         flash('Imagem adicionada com sucesso', category='success')
 
-    return render_template("upload.html", user=current_user)
+    return render_template("upload.html", session=session)
 
 @posts.route('/image')
 def get_image_page():
-    return render_template("image.html", user=current_user)
+    return render_template("image.html", session=session)
 
 @posts.route('/image/<int:id>')
 def get_image(id):
@@ -92,13 +98,14 @@ def get_game(id):
     if request.method == 'POST':
         text = request.form.get("text")
         score = request.form.get("score")
-        review = Review(user_id=current_user.id, game_id=id, text=text, score=score)
+        review = Review(user_id=session['user_id'], game_id=id, text=text, score=score)
 
         db.session.add(review)
         db.session.commit()
         flash('Análise publicada.', category='success')
     
     full_reviews = FullReviewDAO().filter_by_game_id(cursor, id)
+
 
     return render_template("game.html", session=session, game=game, reviews=full_reviews)
 
@@ -123,15 +130,15 @@ def add_to_library():
     
     return jsonify({})
 
-@login_required
+@is_authenticated
 @posts.route('/library')
 def library():
     cursor = mysql.connection.cursor()
     full_library_games = FullLibraryGameDAO().find_by_user_id(cursor, session['user_id'])
 
-    return render_template("library.html", user=current_user, games=full_library_games)
+    return render_template("library.html", session=session, games=full_library_games)
 
-@login_required
+@is_authenticated
 @posts.route('/library/<int:id>', methods=['GET', 'POST'], strict_slashes=False)
 def get_game_in_library(id):
     cursor = mysql.connection.cursor()
@@ -156,19 +163,6 @@ def get_game_in_library(id):
 
     return render_template("library_game.html", session=session, library_game=library_game, game=game, screenshots=screenshots)
 
-@login_required
-@posts.route('/remove-from-library', methods=['POST'])
-def remove_from_library():
-    data = json.loads(request.data)
-    gameId = data['gameId']
-    relation = LibraryGame.query.filter_by(user_id=current_user.id, game_id=gameId).first()
-
-    if relation:
-        db.session.delete(relation)
-        db.session.commit()
-        flash("Jogo removido da sua biblioteca com sucesso", category="success")
-    
-    return jsonify({})
 
 @is_authenticated
 @posts.route('/library/<int:id>/delete')
@@ -181,7 +175,7 @@ def delete_from_library(id):
 
     return redirect(url_for('posts.library'))
 
-@login_required
+@is_authenticated
 @posts.route('/library/<int:id>/update', methods=['GET', 'POST'])
 def update_library(id):
     cursor = mysql.connection.cursor()
@@ -216,13 +210,13 @@ def delete_review():
     reviewId = data['reviewId']
     review = Review.query.get(reviewId)
     if review:
-        if review.user_id == current_user.id:
+        if review.user_id == session['user_id']:
             db.session.delete(review)
             db.session.commit()
     
     return jsonify({})
 
-@login_required
+@is_authenticated
 @posts.route('/games/<int:id>/add-complaint', methods=['GET', 'POST'])
 def add_complaint(id):
     if request.method == 'POST':
@@ -233,7 +227,7 @@ def add_complaint(id):
         game = Game.query.filter_by(id=game_id).first()
 
         if game:
-            complaint = Complaint(user_id=current_user.id, game_id=game_id, type=type, text=text)
+            complaint = Complaint(user_id=session['user_id'], game_id=game_id, type=type, text=text)
             db.session.add(complaint)
             db.session.commit()
             flash('Problema relatado, aguarde a revisão do pedido.', category='success')
@@ -242,7 +236,7 @@ def add_complaint(id):
             flash('Id fornecido não existe.', category='error')
             return redirect(url_for('posts.add_complaint'))
 
-    return render_template('add-complaint.html', user=current_user, game_id=id)
+    return render_template('add-complaint.html', session=session, game_id=id)
 
 @posts.route('/complaints', methods=['GET', 'POST'], strict_slashes=False)
 @is_authenticated
@@ -258,7 +252,7 @@ def complaints():
         game = Game.query.filter_by(id=game_id).first()
 
         if game:
-            complaint = Complaint(user_id=current_user.id, game_id=game_id, type=type, text=text)
+            complaint = Complaint(user_id=session['user_id'], game_id=game_id, type=type, text=text)
             db.session.add(complaint)
             db.session.commit()
             flash('Problema relatado, aguarde a revisão do pedido.', category='success')
@@ -276,19 +270,19 @@ def delete_complaint():
 
     complaint = Complaint.query.get(complaintId)
     if complaint:
-        if complaint.user_id == current_user.id:
+        if complaint.user_id == session['user_id']:
             db.session.delete(complaint)
             db.session.commit()
     
     return jsonify({})
 
-@login_required
+@is_authenticated
 @posts.route('/complaints/<int:id>/update', methods=['GET', 'POST'])
 def update_complaint(id):
     complaint = Complaint.query.get(id)
 
     if request.method == 'POST':
-        if complaint.user_id == current_user.id:
+        if complaint.user_id == session['user_id']:
             game_id = request.form.get('game_id')
             text = request.form.get('text')
             type = request.form.get('type')
@@ -315,12 +309,14 @@ def update_complaint(id):
             flash('Denúncia pedida não foi feita pelo usuário conectado', category='error')
             return redirect(url_for('posts.complaints'))
 
-    return render_template("update-complaint.html", user=current_user)
+    return render_template("update-complaint.html", session=session)
+
 
 @posts.route('/games/<int:id>/update', methods=['GET', 'POST'])
-@login_required
+@is_authenticated
 def update_game(id):
-    game = Game.query.get(id)
+    cursor = mysql.connection.cursor()
+    game = GameDAO().find_by_id(cursor, id)
 
     if request.method == 'POST':
         title = request.form.get('title')
@@ -331,58 +327,50 @@ def update_game(id):
         trailer_url = request.form.get('trailer_url')
         pic = request.files['pic']
 
+        if not title:
+            title = game.title
+        if not release_date:
+            release_date = game.release_date
+        if not release_date:
+            release_date = game.release_date
+        if not description:
+            description = game.description
+        if not developer:
+            developer = game.developer
+        if not publisher:
+            publisher = game.publisher
+        if not trailer_url:
+            trailer_url = game.trailer_url
         if pic:
-            old_img = Image.query.get(game.cover_picture)
-            db.session.delete(old_img)
-
             filename = secure_filename(pic.filename)
             mimetype = pic.mimetype
-            img = Image(img=pic.read(), mimetype=mimetype, name=filename)
+            img = Image(id=None, img=pic.read(), mimetype=mimetype, filename=filename, created_at=None)
+            ImageDAO().add(cursor, img)
+            mysql.connection.commit()
+            cover_picture = cursor.lastrowid
+        else:
+            cover_picture = game.cover_picture
 
-            db.session.add(img)
-            db.session.commit()
+        updated_game = Game(id=game.id, title=title, release_date=release_date, description=description, developer=developer, publisher=publisher, trailer_url=trailer_url, cover_picture=cover_picture)
+        
+        GameDAO().update(cursor, updated_game)
+        mysql.connection.commit()
 
-            game.cover_picture = img.id
-        
-        if title:
-            game.title = title
-        
-        if release_date:
-            game.release_date = release_date
-        
-        if description:
-            game.description = description
-
-        if developer:
-            game.developer = developer
-        
-        if publisher:
-            game.publisher = publisher
-        
-        if trailer_url:
-            game.trailer_url = trailer_url
-
-        db.session.commit()
         flash('Jogo atualizado', category='success')
         return redirect(url_for('posts.get_game', id=game.id))
 
-    if current_user.role == "admin":
-        return render_template("update-game.html", user=current_user, game_id=id)
-    else:
-        flash('Somente administradores podem alterar jogos', category='error')
-        return redirect(url_for('posts.get_game', id=game.id))
+    return render_template("update-game.html", session=session, game_id=id)
+
 
 @posts.route('/games/<int:id>/delete', methods=['GET', 'POST'])
-@login_required
+@is_authenticated
 def delete_game(id):
-    if current_user.role == "admin":
-        game = Game.query.get(id)
-        img = Image.query.get(game.cover_picture)
-
+    if session['user_permission'] == "admin":
         try:
-            db.session.delete(game)
-            db.session.delete(img)
-            db.session.commit()
+            cursor = mysql.connection.cursor()
+            GameDAO().delete(cursor, session['user_id'], id)
+            mysql.connection.commit()
+
             flash("Jogo excluído com sucesso", category="success")
             return redirect(url_for('posts.games'))
         except:
@@ -391,7 +379,7 @@ def delete_game(id):
 
     else:
         flash('Somente administradores podem remover jogos', category='error')
-        return redirect(url_for('posts.games', id=game.id))
+        return redirect(url_for('posts.games', id=id))
 
 @posts.route('/profile/manage')
 @is_authenticated
@@ -399,7 +387,7 @@ def delete_game(id):
 def manage_profiles():
     cursor = mysql.connection.cursor()
     users = UserDAO().get_all(cursor)
-    return render_template("profiles.html", user=current_user, users=users)
+    return render_template("profiles.html", session=session, users=users)
 
 @posts.route('/profile/<int:id>', methods=['GET', 'POST'])
 @is_authenticated
@@ -429,28 +417,28 @@ def manage_complaints():
     return render_template("manage-complaints.html", session=session, complaints=full_complaints)
 
 @posts.route('/check-complaint', methods=['POST'])
-@login_required
+@is_authenticated
 def check_complaint():
     data = json.loads(request.data)
     complaintId = data['complaintId']
 
     complaint = Complaint.query.get(complaintId)
     if complaint:
-        if current_user.role == "admin":
+        if session['user_permission'] == "admin":
             complaint.solved = True
             db.session.commit()
     
     return jsonify({})
 
 @posts.route('/uncheck-complaint', methods=['POST'])
-@login_required
+@is_authenticated
 def uncheck_complaint():
     data = json.loads(request.data)
     complaintId = data['complaintId']
 
     complaint = Complaint.query.get(complaintId)
     if complaint:
-        if current_user.role == "admin":
+        if session['user_permission'] == "admin":
             complaint.solved = False
             db.session.commit()
     
@@ -474,8 +462,6 @@ def delete_screenshot():
     cursor = mysql.connection.cursor()
     ImageDAO().delete(cursor, uploadId)
     mysql.connection.commit()
-
-    print("testandoo")
     
     return jsonify({})
 

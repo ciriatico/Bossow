@@ -17,7 +17,7 @@ block content %}
                             <strong>Papel: </strong>{{ "Conta comum" if profile.role == "user" else "Administrador" }}</br>
                             <strong>Data de criação: </strong>{{ profile.created_at.strftime('%d/%m/%Y') }}</br>
                             <br/>
-                            {% if (current_user.role == "admin") and (profile.role != current_user.id) %}
+                            {% if (session.user_permission == "admin") and (profile.role != session.id) %}
                             <form method="POST">
                               <div class="form-group">
                                 <label>Alterar direitos:</label>

@@ -21,13 +21,13 @@ content %}
                         <br/>
                         <strong>Jogos comprados: </strong>{{ library_games|length }}<br/>
                         <strong>Avaliações feitas: </strong>{{ reviews|length }}<br/>
-                        {% if current_user.role != "admin" %}
+                        {% if session.user_permission != "admin" %}
                         <strong>Denúncias pendentes: </strong>{{ complaints_solved.unsolved }}<br/>
                         <strong>Denúncias resolvidas: </strong>{{ complaints_solved.solved }}<br/>
                         {% endif %}
                     <br/>
                     <a href="{{ url_for('auth.update_profile') }}" class="btn btn-primary btn-sm">Atualizar perfil</a>
-                    {% if current_user.role != "admin" %}
+                    {% if session.user_permission != "admin" %}
                     <a href="{{ url_for('posts.complaints') }}" class="btn btn-info btn-sm">Checar denúncias</a>
                     {% endif %}                        <a
                         href="{{ url_for('auth.delete_profile')}}"

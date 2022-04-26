@@ -137,7 +137,7 @@ def update_profile():
         role = user_now.role
         created_at = user_now.created_at
 
-        updated_user = User(id=user_now.id, email=email, password=password1, full_name=fullName, role=role, created_at=created_at, profile_picture=profile_picture)
+        updated_user = User(id=user_now.id, email=email, password=password1, description=description, role=role, created_at=created_at, profile_picture=profile_picture)
         UserDAO().update(cursor, updated_user)
         mysql.connection.commit()
 
