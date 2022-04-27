@@ -209,20 +209,18 @@ def update_library(id):
 def delete_review():
     data = json.loads(request.data)
     reviewId = data['reviewId']
-
-    print(f"data == {request}")
-
-
+    
     cursor = mysql.connection.cursor()
-    review = ReviewDAO.find_by_id(cursor, reviewId)
-
-
-    print(f"review == {review}")
+    review = ReviewDAO().find_by_id(cursor, reviewId)
     
     if review:
-        if review.user_id == session['user_id']:
-            db.session.delete(review)
-            db.session.commit()
+        if review.user_id == session['user_id'] or session['user_permission'] == "admin":
+
+            cursor = mysql.connection.cursor()
+            ReviewDAO().delete(cursor, session['user_id'], reviewId)
+            mysql.connection.commit()
+
+            flash("Review excluído com sucesso!", category="success")
     
     return jsonify({})
 

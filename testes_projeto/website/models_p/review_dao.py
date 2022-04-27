@@ -57,7 +57,7 @@ class ReviewDAO:
 
     def delete(self, cursor, user_id, review_id):
         try:
-            sql_command = "DELETE FROM game review id = {}".format(review_id)
+            sql_command = "DELETE FROM review WHERE id = {}".format(review_id)
             cursor.execute(sql_command)
 
         except Exception as e:

@@ -121,7 +121,7 @@ block content %}
                       />
                         <strong><a href="/profile/{{review.user_id}}">{{ review.full_name }}</a> publicou:</strong>  
                         {% if (review.user_id == session.user_id) or (session.role == "admin") %}
-                        <button type="button" class="close" onClick="deleteReview({{ review.game_id }}, {{ review.id }})">
+                        <button type="button" class="close" onClick="deleteReview({{ review.game_id }}, {{ review.review_id }})">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         {% endif %}
