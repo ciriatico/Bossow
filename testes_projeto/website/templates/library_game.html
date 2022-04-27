@@ -18,7 +18,7 @@ endblock %} {% block content %}
                         <strong>Último login: </strong>{{ library_game.last_logged_in }}</br>
                         <br/>
                         <a href="{{ url_for('posts.update_library', id=library_game.game_id) }}" class="btn btn-primary btn-sm">Atualizar dados</a>
-                        <a href="{{ url_for('posts.delete_from_library', id=library_game.game_id) }}" class="btn btn-primary btn-danger btn-sm">Remover jogo</a>
+                        <a href="{{ url_for('posts.delete_from_library', id=library_game.game_id) }}" class="btn btn-primary btn-danger btn-sm">Remover jogo da biblioteca</a>
                       <br/><br/>
                     </div>
                     <div class="col-4"><img src="/image/{{ game.cover_picture }}" width="200" align="right"></div>

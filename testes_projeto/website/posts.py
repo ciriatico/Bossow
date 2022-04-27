@@ -60,22 +60,22 @@ def add_game():
 
     return render_template('add-game.html', session=session)
 
-@posts.route('/upload', methods=['GET', 'POST'])
-def upload():
-    if request.method == 'POST':
-        pic = request.files['pic']
+# @posts.route('/upload', methods=['GET', 'POST'])
+# def upload():
+#     if request.method == 'POST':
+#         pic = request.files['pic']
 
-        if not pic:
-            return 'No pic uploaded.'
+#         if not pic:
+#             return 'No pic uploaded.'
 
-        filename = secure_filename(pic.filename)
-        mimetype = pic.mimetype
-        img = Image(img=pic.read(), mimetype=mimetype, name=filename)
-        db.session.add(img)
-        db.session.commit()
-        flash('Imagem adicionada com sucesso', category='success')
+#         filename = secure_filename(pic.filename)
+#         mimetype = pic.mimetype
+#         img = Image(img=pic.read(), mimetype=mimetype, name=filename)
+#         db.session.add(img)
+#         db.session.commit()
+#         flash('Imagem adicionada com sucesso', category='success')
 
-    return render_template("upload.html", session=session)
+#     return render_template("upload.html", session=session)
 
 @posts.route('/image')
 def get_image_page():
@@ -98,14 +98,15 @@ def get_game(id):
     if request.method == 'POST':
         text = request.form.get("text")
         score = request.form.get("score")
+
         review = Review(user_id=session['user_id'], game_id=id, text=text, score=score)
 
-        db.session.add(review)
-        db.session.commit()
+        ReviewDAO().add(cursor, review)
+        mysql.connection.commit()
+        
         flash('Análise publicada.', category='success')
     
     full_reviews = FullReviewDAO().filter_by_game_id(cursor, id)
-
 
     return render_template("game.html", session=session, game=game, reviews=full_reviews)
 
@@ -208,7 +209,16 @@ def update_library(id):
 def delete_review():
     data = json.loads(request.data)
     reviewId = data['reviewId']
-    review = Review.query.get(reviewId)
+
+    print(f"data == {request}")
+
+
+    cursor = mysql.connection.cursor()
+    review = ReviewDAO.find_by_id(cursor, reviewId)
+
+
+    print(f"review == {review}")
+    
     if review:
         if review.user_id == session['user_id']:
             db.session.delete(review)
@@ -462,6 +472,8 @@ def delete_screenshot():
     cursor = mysql.connection.cursor()
     ImageDAO().delete(cursor, uploadId)
     mysql.connection.commit()
+
+    flash('Captura de tela deletada com sucesso!', category='success')
     
     return jsonify({})
 

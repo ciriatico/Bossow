@@ -34,3 +34,31 @@ class ReviewDAO:
         except Exception as e:
             print(e)
             return None
+
+    def find_by_id(self, cursor, id):
+        try:
+            sql_command = "SELECT * FROM review WHERE id = {}".format(str(id))
+            cursor.execute(sql_command)
+            result = cursor.fetchone()
+            game = Review(*result)
+            return game
+        
+        except Exception as e:
+            print(e)
+            return None
+
+    def add(self, cursor, review):
+        try:
+            sql_command = "INSERT INTO review (user_id, game_id, review_text, score) VALUES ({}, {}, '{}', {})".format(review.user_id, review.game_id, review.text, review.score)
+            cursor.execute(sql_command)
+
+        except Exception as e:
+            print(e)
+
+    def delete(self, cursor, user_id, review_id):
+        try:
+            sql_command = "DELETE FROM game review id = {}".format(review_id)
+            cursor.execute(sql_command)
+
+        except Exception as e:
+            print(e)
