@@ -20,7 +20,7 @@ class FullLibraryGameDAO:
     def find_by_user_id(self, cursor, user_id):
         try:
             print(f"user_id {user_id}")
-            cursor.callproc('selectLibrary', ["user_id", str(user_id)])
+            cursor.callproc('selectLibrary2', ["user_id", str(user_id)])
             result = cursor.fetchall()
             print(f"games {games}")
             games = [FullLibraryGame(*game) for game in result]

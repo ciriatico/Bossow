@@ -405,7 +405,9 @@ def get_profile(id):
     profile = UserDAO().find_by_id(cursor, id)
     notes = NoteDAO().filter_by_user_id(cursor, id)
     full_reviews = FullReviewDAO().find_by_user_id(cursor, id)
+    print(f"full_reviews {full_reviews}")
     full_library_games = FullLibraryGameDAO().find_by_user_id(cursor, id)
+    print(f"full_library_games {full_library_games}")
     complaints = ComplaintDAO().filter_by_user_id(cursor, id)
 
     if request.method == 'POST':
