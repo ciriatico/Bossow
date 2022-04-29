@@ -110,3 +110,19 @@ CREATE TABLE note (
 		REFERENCES user(id)
 		ON DELETE CASCADE
 );
+
+DELIMITER $$
+CREATE PROCEDURE `selectFilteredReview` (coluna varchar(100), value_id varchar(100))
+BEGIN
+SET @sql = CONCAT('SELECT review_id, user_id, game_id, review_text, score, date_created, email, full_name, profile_picture, title, cover_picture
+FROM (SELECT filtered_review.id as review_id, user_id, game_id, review_text, score, filtered_review.date_created, email, full_name, profile_picture 
+		FROM (
+				SELECT * FROM review WHERE ', coluna, ' = ', value_id, ') as filtered_review INNER JOIN user ON filtered_review.user_id = user.id ORDER BY date_created
+			) as review_user
+INNER JOIN (SELECT id, title, cover_picture FROM game) as filtered_game ON review_user.game_id = filtered_game.id;');
+
+PREPARE stmt1 FROM @sql;
+EXECUTE stmt1;
+DEALLOCATE PREPARE stmt1;
+END $$
+DELIMITER ;

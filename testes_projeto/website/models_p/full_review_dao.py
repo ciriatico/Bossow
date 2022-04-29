@@ -18,8 +18,7 @@ class FullReviewDAO:
     
     def filter_by_game_id(self, cursor, game_id):
         try:
-            sql_command = "SELECT review_id, user_id, game_id, review_text, score, date_created, email, full_name, profile_picture, title, cover_picture FROM (SELECT filtered_review.id as review_id, user_id, game_id, review_text, score, filtered_review.date_created, email, full_name, profile_picture FROM (SELECT * FROM review WHERE game_id = {}) as filtered_review INNER JOIN user ON filtered_review.user_id = user.id ORDER BY date_created) as review_user INNER JOIN (SELECT id, title, cover_picture FROM game) as filtered_game ON review_user.game_id = filtered_game.id".format(str(game_id))
-            cursor.execute(sql_command)
+            cursor.callproc('selectFilteredReview', ["game_id", str(game_id)])
             result = cursor.fetchall()
             full_reviews = [FullReview(*review) for review in result]
             return full_reviews
@@ -30,9 +29,9 @@ class FullReviewDAO:
 
     def find_by_user_id(self, cursor, user_id):
         try:
-            sql_command = "SELECT review_id, user_id, game_id, review_text, score, date_created, email, full_name, profile_picture, title, cover_picture FROM (SELECT filtered_review.id as review_id, user_id, game_id, review_text, score, filtered_review.date_created, email, full_name, profile_picture FROM (SELECT * FROM review WHERE user_id = {}) as filtered_review INNER JOIN user ON filtered_review.user_id = user.id ORDER BY date_created) as review_user INNER JOIN (SELECT id, title, cover_picture FROM game) as filtered_game ON review_user.game_id = filtered_game.id".format(str(user_id))
-            cursor.execute(sql_command)
+            cursor.callproc('selectFilteredReview', ["user_id", str(user_id)])
             result = cursor.fetchall()
+            
             full_reviews = [FullReview(*review) for review in result]
             return full_reviews
         
