@@ -19,9 +19,10 @@ class FullLibraryGameDAO:
 
     def find_by_user_id(self, cursor, user_id):
         try:
-            sql_command = "SELECT user_id, game_id, hours_played, completion_percentage, last_logged_in, title, release_date, description, developer, publisher, trailer_url, cover_picture FROM (SELECT * FROM library_game WHERE user_id = {}) as filtered_library INNER JOIN game ON filtered_library.game_id = game.id;".format(str(user_id))
-            cursor.execute(sql_command)
+            print(f"user_id {user_id}")
+            cursor.callproc('selectLibrary', ["user_id", str(user_id)])
             result = cursor.fetchall()
+            print(f"games {games}")
             games = [FullLibraryGame(*game) for game in result]
             return games
         

@@ -18,8 +18,7 @@ class FullComplaintDAO:
     
     def get_all(self, cursor):
         try:
-            sql_command = "SELECT complaint_id, user_id, full_name, profile_picture, game_id, type, complaint_text, solved, date_created, title, cover_picture FROM (SELECT complaint.id as complaint_id, user_id, game_id, type, complaint_text, solved, date_created, title, cover_picture FROM complaint INNER JOIN game ON complaint.game_id = game.id) as complaint_game INNER JOIN user ON complaint_game.user_id = user.id ORDER BY date_created"
-            cursor.execute(sql_command)
+            cursor.callproc('selectComplaint', ["user_id", "user_id"]) #retorna todos pois user_id == user_id
             result = cursor.fetchall()
             complaints = [FullComplaint(*complaint) for complaint in result]
             return complaints
@@ -30,8 +29,7 @@ class FullComplaintDAO:
     
     def filter_by_user_id(self, cursor, user_id):
         try:
-            sql_command = "SELECT complaint_id, user_id, full_name, profile_picture, game_id, type, complaint_text, solved, date_created, title, cover_picture FROM (SELECT complaint.id as complaint_id, user_id, game_id, type, complaint_text, solved, date_created, title, cover_picture FROM complaint INNER JOIN game ON complaint.game_id = game.id WHERE user_id = {}) as complaint_game INNER JOIN user ON complaint_game.user_id = user.id ORDER BY date_created".format(user_id)
-            cursor.execute(sql_command)
+            cursor.callproc('selectComplaint', ["user_id", str(user_id)])
             result = cursor.fetchall()
             complaints = [FullComplaint(*complaint) for complaint in result]
             return complaints
