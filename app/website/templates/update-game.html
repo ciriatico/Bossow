@@ -1,0 +1,93 @@
+{% extends "base.html" %} {% block title %}Atualizar jogo{% endblock %} {% block
+    content %}
+    <form enctype="multipart/form-data" method="POST">
+      <br />
+      <h3 align="center">Atualizar jogo</h3>
+      <h5 align="center">{{ game.game_title }}</h5>
+      <div class="form-group">
+        <label for="title">Título</label>
+        <input
+          type="title"
+          class="form-control"
+          id="title"
+          name="title"
+          placeholder="Insira título do jogo"
+        />
+      </div>
+      <div class="form-group">
+        <label for="release_date">Data de lançamento</label>
+        <input
+          type="release_date"
+          class="form-control"
+          id="release_date"
+          name="release_date"
+          placeholder="Insira data de lançamento do jogo"
+        />
+      </div>
+      <div class="form-group">
+        <label for="description">Descrição</label>
+        <input
+          type="description"
+          class="form-control"
+          id="description"
+          name="description"
+          placeholder="Insira o nome da desenvolvedora do jogo"
+        />
+      </div>
+      <div class="form-group">
+        <label>Desenvolvedora:</label>
+        <select name="developer" id="developer">
+          {% for developer in developers %}
+          <option value="{{ developer.developer_id }}">{{ developer.developer_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Publicadora:</label>
+        <select name="publisher" id="publisher">
+          {% for publisher in publishers %}
+          <option value="{{ publisher.publisher_id }}">{{ publisher.publisher_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="description">Enredo</label>
+        <textarea class="form-control" name="description" id="description" rows="3" placeholder="Insira o enredo do jogo"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="trailer">Link do trailer</label>
+        <input
+          type="trailer_url"
+          class="form-control"
+          id="trailer_url"
+          name="trailer_url"
+          placeholder="Insira o link do trailer"
+        />
+      </div>
+      <div class="form-group">
+        <label for="file">Capa do jogo</label>
+      </br>
+        <input type="file" name="pic" enctype="multipart/form-data" method="POST" />
+      </div>
+      <div class="form-group">
+        <label>Disponível em:</label>
+        <br/>
+        <select name="console" id="console" multiple>
+          {% for console in consoles %}
+          <option value="{{ console.console_id }}">{{ console.console_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <br />
+      <button type="submit" class="btn btn-primary">Atualizar jogo</button>
+      <a
+      href="{{ url_for('games.delete_game', id=game.game_id)}}"
+      class="btn btn-danger"
+      >Deletar jogo</a
+    >
+      <a href="/games/{{ game.game_id }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+    <br />
+    
+    {% endblock %}
+    

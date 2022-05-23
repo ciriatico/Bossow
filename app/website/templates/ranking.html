@@ -1,0 +1,39 @@
+{% extends "base.html" %} {% block title %}Biblioteca de jogos{% endblock %} {%
+    block content %}
+    
+    <br />
+    <h2>Ranking de jogos</h2>
+    <br />
+    
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col"></th>
+            <th scope="col">Título</th>
+            <th scope="col">Média</th>
+            <th scope="col">Usuários</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for ranking in rankings %}
+        <tr>
+            <th scope="row">{{loop.index}}</th>
+            <td>        <img
+                src="/image/{{ ranking.cover_picture }}"
+                align="center"
+                style="max-width: 70px; height: auto"
+              /></td>
+            <td><a href="/games/{{ ranking.game_id }}">{{ ranking.game_title }}</a></td>
+            <td>{{"{:.2f}".format(ranking.mean_score)}}</td>
+            <td>{{ranking.count_library}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+
+
+      <br/>
+
+    {% endblock %}
+    

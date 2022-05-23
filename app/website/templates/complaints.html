@@ -1,0 +1,32 @@
+{% extends "base.html" %} {% block title %}Denúncias{% endblock %} {% block
+content %}
+<br />
+<h3 align="center">Denúncias feitas</h3>
+<ul class="list-group list-group-flush" id="notes">
+  {% for complaint in complaints %}
+  <li class="list-group-item">
+    {% if not complaint.solved %}
+    <button
+      type="button"
+      class="close"
+      onClick="deleteComplaint({{ complaint.complaint_id }})"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <a
+      href="{{ url_for('complaints.update_complaint', id=complaint.complaint_id) }}"
+      class="close"
+      ><span aria-hidden="true">&#9998;</span></a
+    >
+    {% endif %}
+    <strong>Jogo: </strong> {{ complaint.game_title }}<br />
+    <strong>Id da denúncia:</strong> {{complaint.complaint_id}}<br />
+    <strong>Denúncia: </strong>{{ complaint.complaint_text }}<br />
+    <strong>Estado da solicitação: </strong> {{"Resolvido" if complaint.solved
+    else "Pendente"}}<br />
+    <strong>Tipo da solicitação: </strong> {{ "Alteração" if complaint.complaint_type ==
+    "change" else "Exclusão" }}
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

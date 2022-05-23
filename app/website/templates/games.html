@@ -1,0 +1,48 @@
+{% extends "base.html" %} {% block title %}Jogos{% endblock %} {% block content
+%}
+
+<br />
+<h1>Jogos</h1>
+
+{% if session.user_id %}
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      <a
+        href="{{ url_for('games.add_game') }}"
+        class="btn btn-primary btn-sm float-right"
+        >Adicionar jogo</a
+      >
+    </div>
+  </div>
+</div>
+
+{% endif %}
+
+<br />
+
+{% for game_row in games | batch(3, '&nbsp;') %}
+<div class="row">
+  {% for game in game_row %} {% if game.game_title|length %}
+  <div class="col-sm">
+    <div class="shadow p-3 mb-5 bg-body rounded">
+      <a href="/games/{{ game.game_id }}"><h3>{{ game.game_title }}</h3></a>
+      <a class="thumbnail">
+        <img
+          src="/image/{{ game.cover_picture }}"
+          align="center"
+          style="max-width: 100%; height: auto"
+        />
+      </a>
+      <strong>Data de lançamento:</strong> {{ game.release_date.strftime("%d/%m/%Y") }}<br />
+      <strong>Desenvolvedora:</strong> {{ game.developer_id }}<br />
+      <strong>Publicadora:</strong> {{ game.publisher_id }}<br /><br />
+      <strong>Enredo:</strong> {{ game.description }}<br />
+    </div>
+  </div>
+  {% else %}
+  <div class="col-sm"></div>
+  {% endif %} {% endfor %}
+</div>
+
+{% endfor %} {% endblock %}

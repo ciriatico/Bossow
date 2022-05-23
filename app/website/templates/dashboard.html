@@ -1,0 +1,73 @@
+{% extends "base.html" %} {% block title %}Dashboard{% endblock %} {% block
+content %}
+
+<br/>
+<h2>Dashboard</h2>
+<br/>
+
+<div class="card">
+    <div class="card-header">
+        Bem-vindo, {{ user.full_name }}
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Informações do perfil</h5>
+        <p class="card-text">
+            <div class="container">
+                <div class="row">
+                    <div class="col-8">
+                        <strong>Id do usuário: </strong>{{ user.user_id }}<br/>
+                        <strong>Tipo de conta: </strong>{{"Usuário" if user.role != "admin" else "Administrador"}}<br/>
+                        <strong>E-mail: </strong>{{ user.user_email }}<br/>
+                        <br/>
+                        <strong>Jogos comprados: </strong>{{ library_games|length }}<br/>
+                        <strong>Avaliações feitas: </strong>{{ reviews|length }}<br/>
+                        {% if session.user_permission != "admin" %}
+                        <strong>Denúncias pendentes: </strong>{{ complaints_solved.unsolved }}<br/>
+                        <strong>Denúncias resolvidas: </strong>{{ complaints_solved.solved }}<br/>
+                        {% endif %}
+                    <br/>
+                    <a href="{{ url_for('profiles.update_profile') }}" class="btn btn-primary btn-sm">Atualizar perfil</a>
+                    {% if session.user_permission != "admin" %}
+                    <a href="{{ url_for('complaints.get_complaints') }}" class="btn btn-info btn-sm">Checar denúncias</a>
+                    {% endif %}                        <a
+                        href="{{ url_for('profiles.delete_profile')}}"
+                        class="btn btn-danger btn-sm"
+                        >Deletar conta</a
+                      >
+                      <br/><br/>
+                    </div>
+                    <div class="col-4"><img src="image/{{ user.profile_picture }}" width="150" align="right"></div>
+                </div>
+            </div>
+        </p>
+    </div>
+</div>
+
+{% if session.user_permission == "admin" %}
+<br/>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Páginas de gerenciamento</h5>
+        <p class="card-text">
+            <div class="container">
+                <div class="row">
+                    <div class="col-8">
+                        <strong>Contas registradas: </strong>{{ admin_info.users }}<br/>
+                        <strong>Denúncias pendentes: </strong>{{ admin_info.unsolved_complaints }}<br/>
+                        <br/>
+                    <a href="{{ url_for('profiles.manage_profiles') }}" class="btn btn-primary btn-sm">Gerenciar contas</a>
+                    <a href="{{ url_for('complaints.manage_complaints') }}" class="btn btn-info btn-sm">Gerenciar denúncias</a>
+                    <a href="{{ url_for('images.manage_uploads') }}" class="btn btn-warning btn-sm">Gerenciar uploads</a>
+                      <br/><br/>
+                    </div>
+                </div>
+            </div>
+        </p>
+    </div>
+</div>
+{% endif %}
+
+<br/>
+
+{% endblock %}
+

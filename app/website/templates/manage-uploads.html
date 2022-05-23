@@ -1,0 +1,43 @@
+{% extends "base.html" %} {% block title %}Gerenciar denúncias{% endblock %} {%
+block content %}
+
+<br />
+<h3 align="center">Gerenciar uploads</h3>
+<br />
+
+{% for uploads_row in uploads | batch(6, ' ') %}
+<div class="row">
+  {% for upload in uploads_row %} {% if upload.pic_id %}
+  <div class="col-sm">
+    <div class="shadow p-3 mb-5 bg-body rounded">
+        <button
+        type="button"
+        class="close"
+        onClick="deleteUpload({{ upload.pic_id }})"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <a class="thumbnail" href="/image/{{ upload.pic_id }}" target="_blank">
+          <a href="/image/{{ upload.pic_id }}" target="_blank">
+        <img
+          src="/image/{{ upload.pic_id }}"
+          align="center"
+          style="max-width: 80px; height: auto; display: block; margin: 0 auto"
+        />
+      </a>
+    </br>
+      Id: {{ upload.id }}<br/>
+      Upload: {{ upload.id }}
+    </div>
+  </div>
+  {% else %}
+  <div class="col-sm"></div>
+  {% endif %} {% endfor %}
+</div>
+{% endfor %}
+
+<a href="/dashboard" class="btn btn-secondary">Voltar</a>
+
+<br />
+<br />
+{% endblock %}

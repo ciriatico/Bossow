@@ -1,0 +1,33 @@
+{% extends "base.html" %} {% block title %}Reportar problema{% endblock %} {%
+block content %}
+<form enctype="multipart/form-data" method="POST">
+  <br />
+  <h3 align="center">Reportar problema em jogo</h3>
+  <div class="form-group">
+    <label for="text">Justifique a denúncia</label>
+    <textarea
+      type="text"
+      id="text"
+      name="text"
+      class="form-control"
+      placeholder="Explique a denúncia a ser feita"
+      rows="4"
+    ></textarea>
+  </div>
+  <div class="form-group">
+    <label>Ação requerida:</label>
+    <select name="type" id="type">
+      <option value="change">Alterar jogo</option>
+      <option value="delete">Deletar jogo</option>
+    </select>
+  </div>
+  <button type="submit" class="btn btn-primary">Reportar problema</button>
+  <a
+    href="{{ url_for('games.get_game', id=game_id) }}"
+    class="btn btn-secondary"
+    >Cancelar</a
+  >
+</form>
+<br />
+
+{% endblock %}

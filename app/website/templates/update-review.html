@@ -1,0 +1,34 @@
+{% extends "base.html" %} {% block title %}Atualizar análise{% endblock %} {%
+    block content %}
+    <form enctype="multipart/form-data" method="POST">
+      <br />
+      <h3 align="center">Atualizar análise</h3>
+      <h5 align="center">{{game.title}}</h5>
+      <div class="form-group">
+        <label for="text">Texto da análise</label>
+        <textarea
+          type="text"
+          id="text"
+          name="text"
+          class="form-control"
+          placeholder="Texto da análise"
+          rows="4"
+        ></textarea>
+      </div>
+      <div class="form-group">
+        <label>Nota:</label>
+        <select name="score" id="score">
+          <option value=1>*</option>
+          <option value=2>**</option>
+          <option value=3>***</option>
+          <option value=4>****</option>
+          <option value=5>*****</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">Atualizar denúncia</button>
+      <a href="/games/{{ game.id }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+    <br />
+    
+    {% endblock %}
+    

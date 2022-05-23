@@ -1,0 +1,156 @@
+{% extends "base.html" %} {% block title %}{{ game.game_title }}{% endblock %} {%
+block content %}
+
+<br />
+<h1>{{ game.game_title }}</h1>
+
+{% if session.user_id %}
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      {% if session.user_permission != "admin" %}
+      <a
+      href="{{ url_for('complaints.add_complaint', id=game.game_id) }}"
+      class="btn btn-primary btn-sm btn-danger float-right"
+      >Reportar problema</a
+    >
+    {% endif %}
+    {% if session.user_permission == "admin" %}
+    <a
+    href="{{ url_for('games.update_game', id=game.game_id) }}"
+    class="btn btn-secondary btn-sm float-right"
+    >Alterar jogo</a
+  >
+    {% endif %}
+        <button
+        type="button"
+        class="btn btn-primary btn-sm float-right"
+        onClick="addToLibrary({{ game.game_id }})"
+      >
+        Adicionar à biblioteca
+      </button>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<br/>
+
+<div class="card">
+    <div class="card-header">
+    </div>  
+    <div class="card-body">
+        <h5 class="card-title">Informações do jogo</h5>
+        <p class="card-text">
+            <div class="container">
+                <div class="row">
+                    <div class="col-8">
+                      <strong>Id do jogo: </strong>{{ game.game_id }}</br>
+                        <strong>Data de lançamento: </strong>{{ game.release_date.strftime("%d/%m/%Y") }}</br>
+                        <strong>Desenvolvedora: </strong>{{ developer.developer_name }}</br>
+                        <strong>Publicadora: </strong>{{ publisher.publisher_name }}</br>
+                        <strong>Disponível em: </strong>
+                        {% for console in consoles %}
+                        {{ console.console_name }}
+                        {% if console.console_id != consoles[-1].console_id %}
+                        - 
+                        {% endif %}
+                        {% endfor %}
+                      </br>
+                        <br/>
+                        <strong>Enredo: </strong>{{ game.description }}</br>
+                        <br/>
+                      <br/><br/>
+                    </div>
+                    <div class="col-4"><img src="/image/{{ game.cover_picture }}" width="250" align="right"></div>
+                </div>
+            </div>
+        </p>
+    </div>
+</div>
+
+<br />
+
+<div class="card">
+    <div class="card-header">
+        <h5>Trailer</h5>
+    </div>
+    <div class="card-body">
+            <div class="container">
+                <div class="row">
+                    <iframe style="display: block; margin: auto;" width="560" height="315" src="{{ game.trailer_url.replace('watch?v=', 'embed/') }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                      <br/><br/>
+                </div>
+            </div>
+        </p>
+    </div>
+</div>
+
+<br/>
+
+<div class="card">
+    <div class="card-header">
+        <h5>Análises sobre o jogo</h5>
+    </div>
+    <div class="card-body">
+            <div class="container">
+                {% if session.user_id %}
+                    <form class="mb-3" method="POST">
+                        <textarea
+                          type="text"
+                          id="text"
+                          name="text"
+                          class="form-control"
+                          placeholder="Insira sua análise"
+                          rows="4"
+                        ></textarea>
+                        <br />
+                        <label>Nota:</label>
+                        <select name="score" id="score">
+                          <option value=1>*</option>
+                          <option value=2>**</option>
+                          <option value=3>***</option>
+                          <option value=4>****</option>
+                          <option value=5>*****</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary float-right">
+                          Publicar análise
+                        </button>
+                      </form>
+                      {% endif %}
+
+                      <hr class="mt-2 mb-3"/>
+                      {% for review in reviews %}
+                      <div class="shadow p-3 mb-2 bg-body rounded">
+                        <img
+                        src="/image/{{ review.profile_picture }}"
+                        align="center"
+                        style="max-width: 40px; height: auto"
+                      />
+                        <strong><a href="/profile/{{review.user_id}}">{{ review.full_name }}</a> publicou:</strong>  
+                        {% if (review.user_id == session.user_id) or (session.user_permission == "admin") %}
+                        <button type="button" class="close" onClick="deleteReview({{ review.game_id }}, {{ review.review_id }})">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {% endif %}
+                        {% if review.user_id == session.user_id %}
+                        <a
+                        href="{{ url_for('reviews.update_review', id=review.review_id) }}"
+                        class="close"
+                        ><span aria-hidden="true">&#9998;</span></a
+                      >
+                        {% endif %}
+                        <hr class="mt-2 mb-3"/>
+                        <p>{{ review.review_text }}</p>
+                        <hr class="mt-2 mb-3"/>
+                    <p style="text-align:right;">Nota: {{ review.score }}/5</p>
+                    </div>
+                      {% endfor %}
+            </div>
+        </p>
+    </div>
+</div>
+
+<br/>
+
+{% endblock %}
