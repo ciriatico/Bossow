@@ -29,7 +29,7 @@ class FullReviewDAO:
 
     def find_by_user_id(self, cursor, user_id):
         try:
-            cursor.callproc('selectFilteredReview2', [str(user_id)])
+            cursor.callproc('selectFilteredReview1', [str(user_id)])
             result = cursor.fetchall()
             full_reviews = [FullReview(*review) for review in result]
             return full_reviews

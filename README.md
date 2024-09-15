@@ -1,31 +1,16 @@
 # (BD - 2021.2): Bossow, rede social de jogos
 Projeto final da disciplina de Bancos de Dados, ofertada na Universidade de Brasília (UnB) no semestre 2021.2.
 
-## Preparação do ambiente
-
-O projeto foi feito utilizando o banco de dados MySQL. O primeiro passo para rodar o Bossow é executar os scripts SQL para criação e população do banco de dados.
-
-Primeiro, rode o script `cria_banco.sql`. Depois, é necessário popular o banco. Como há dados binários de imagens, é preciso colocar as imagens que serão usadas no banco na pasta de uploads do SGBD.
-
-Para tanto, execute o comando abaixo, que indicará a pasta onde as imagens podem ser colocadas:
-
-`
-SELECT @@secure_file_priv;
-`
-
-Com o diretório dado por esse comando, altere o script `popula_banco.sql` substituindo `to_be_set\\` pelo diretório encontrado (no Windows, o endereço precisa ser escapado com uma barra a mais \). Transfira todas as imagens na pasta data para o diretório indicado pelo SGBD. Com isso, execute o script.
-
 ## Executando o projeto
 
-O site foi feito utilizando Flask. Para executá-lo, é necessário primeiro alterar o script `config.py`, inserindo as informações do banco MySQL que está rodando o banco (MYSQL_USER e MYSQL_PASSWORD precisam ser alterados).
-
-Depois, basta executar o comando
+O site foi feito utilizando Flask. Para executá-lo, basta dar build no docker-compose. A aplicação em Flask e o banco MySQL já estão configurados como contêineres. A imagem MySQL foi customizada para já ser inicializada com alguns dados básicos.
 
 `
-python run.py
+docker-compose build
+docker-compose up
 `
 
-O site poderá ser acessado através da URL: `http://127.0.0.1:5000/`.
+O site poderá ser acessado através da URL: `http://localhost:5001/`.
 
 ## Interface com usuário
 

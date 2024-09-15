@@ -1,0 +1,35 @@
+version: '3'
+services:
+  bossow-app:
+    build: .
+    ports:
+      - "5001:5000"
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: senhabossow
+      MYSQL_DB: bossow
+    depends_on:
+      - mysql
+    volumes:
+      - .:/app
+    networks:
+      - flask-mysql
+
+  mysql:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    environment:
+      MYSQL_ROOT_PASSWORD: senhabossow
+      MYSQL_DATABASE: bossow
+      LANG: C.UTF-8
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    networks:
+      - flask-mysql
+
+networks:
+  flask-mysql:
+    driver: bridge

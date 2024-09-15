@@ -24,7 +24,7 @@ class ImageDAO:
     
     def find_by_id(self, cursor, pic_id):
         try:
-            sql_command = "SELECT * FROM image WHERE pic_id = {}".format(str(pic_id))
+            sql_command = "SELECT * FROM Image WHERE pic_id = {}".format(str(pic_id))
             cursor.execute(sql_command)
             result = cursor.fetchone()
             image = Image(*result)
