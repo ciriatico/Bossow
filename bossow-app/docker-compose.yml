@@ -19,18 +19,19 @@ services:
 
   mysql:
     container_name: bossow_db
-    build:
-      context: ./db
-      dockerfile: Dockerfile
+    image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: senhabossow
       MYSQL_DATABASE: bossow
       LANG: C.UTF-8
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    command: --secure-file-priv='/var/lib/mysql-files'
     ports:
       - "3306:3306"
     networks:
       - flask-mysql
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d/:ro
+      - ./images:/var/lib/mysql-files
 
 networks:
   flask-mysql:
