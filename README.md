@@ -5,10 +5,10 @@ Projeto final da disciplina de Bancos de Dados, ofertada na Universidade de Bras
 
 O site foi feito utilizando Flask. Para executá-lo, basta dar build no docker-compose. A aplicação em Flask e o banco MySQL já estão configurados como contêineres. A imagem MySQL foi customizada para já ser inicializada com alguns dados básicos.
 
-`
+```bash
 docker-compose build
 docker-compose up
-`
+```
 
 O site poderá ser acessado através da URL: `http://localhost:5001/`.
 
